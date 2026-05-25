@@ -1,0 +1,14 @@
+name: fran2
+title: fran2
+username: lopescmdea
+account: lopescmdea
+server: connect.posit.cloud
+hostUrl: https://api.connect.posit.cloud/v1
+appId: 019e27fe-d103-b08a-03a1-334728c648df
+bundleId:
+url: https://connect.posit.cloud/lopescmdea/content/019e27fe-d103-b08a-03a1-334728c648df
+version: 1
+quarto_version: 1.1.251
+quarto_engines: knitr
+asMultiple: FALSE
+asStatic: FALSE

@@ -1,0 +1,14 @@
+name: dados_pi
+title: dados_pi
+username: lopescmdea
+account: lopescmdea
+server: connect.posit.cloud
+hostUrl: https://api.connect.posit.cloud/v1
+appId: 019e267f-e213-3213-729f-ab034ef66e54
+bundleId:
+url: https://connect.posit.cloud/lopescmdea/content/019e267f-e213-3213-729f-ab034ef66e54
+version: 1
+quarto_version: 1.1.251
+quarto_engines: knitr
+asMultiple: FALSE
+asStatic: FALSE

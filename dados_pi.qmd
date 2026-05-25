@@ -4,7 +4,7 @@ title: "Participação Setorial no Valor Adicionado — Piauí (2021)"
 
 ## Bibliotecas
 
-Carregamento dos pacotes utilizados: `sidrar` para acesso à API do SIDRA/IBGE, `tidyverse` para manipulação de dados, `geobr` e `sf` para dados geoespaciais, e `patchwork` para composição de gráficos.
+Do Carregamento dos pacotes utilizados: `sidrar` para acesso à API do SIDRA/IBGE, `tidyverse` para manipulação de dados, `geobr` e `sf` para dados geoespaciais, e `patchwork` para composição de gráficos.
 
 ```{r}
 #| output: false
@@ -14,6 +14,7 @@ library(tidyverse)
 library(geobr)
 library(sf)
 library(patchwork)
+library(DT)
 ```
 
 ## Coleta de dados
@@ -131,3 +132,55 @@ p3 <- ggplot(pi_map, aes(fill = part_serv)) +
 p1 + p2 + p3 +
   plot_annotation(title = "Participação setorial no Valor Adicionado — Piauí (2021)")
 ```
+
+```{r}
+#| message: false
+
+participacao |>
+  mutate(
+    part_agro = scales::percent(part_agro, accuracy = 0.1),
+    part_ind  = scales::percent(part_ind,  accuracy = 0.1),
+    part_serv = scales::percent(part_serv, accuracy = 0.1)
+  ) |>
+  select(
+    Município = MUN,
+    Agropecuária = part_agro,
+    Indústria = part_ind,
+    Serviços = part_serv
+  ) |>
+  knitr::kable(
+    caption = "Participação setorial no Valor Adicionado dos municípios do Piauí — 2021"
+  )
+
+```
+
+
+```{r}
+## Tabela de participação setorial
+
+#| message: false
+
+participacao |>
+  mutate(
+    part_agro = scales::percent(part_agro, accuracy = 0.1),
+    part_ind  = scales::percent(part_ind,  accuracy = 0.1),
+    part_serv = scales::percent(part_serv, accuracy = 0.1)
+  ) |>
+  select(
+    Município = MUN,
+    Agropecuária = part_agro,
+    Indústria = part_ind,
+    Serviços = part_serv
+  ) |>
+  datatable(
+    caption = "Participação setorial no Valor Adicionado dos municípios do Piauí — 2021",
+    rownames = FALSE,
+    filter = "top",
+    options = list(
+      pageLength = 10,
+      language = list(url = "//cdn.datatables.net/plug-ins/1.13.6/i18n/pt-BR.json")
+    )
+  )
+
+```
+

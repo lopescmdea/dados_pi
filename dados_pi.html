@@ -97,6 +97,21 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <link href="dados_pi_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
 <link href="dados_pi_files/libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
 
+<link href="dados_pi_files/libs/htmltools-fill-0.5.8.1/fill.css" rel="stylesheet">
+<script src="dados_pi_files/libs/htmlwidgets-1.6.4/htmlwidgets.js"></script>
+<link href="dados_pi_files/libs/datatables-css-0.0.0/datatables-crosstalk.css" rel="stylesheet">
+<script src="dados_pi_files/libs/datatables-binding-0.34.0/datatables.js"></script>
+<script src="dados_pi_files/libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<link href="dados_pi_files/libs/dt-core-1.13.6/css/jquery.dataTables.min.css" rel="stylesheet">
+<link href="dados_pi_files/libs/dt-core-1.13.6/css/jquery.dataTables.extra.css" rel="stylesheet">
+<script src="dados_pi_files/libs/dt-core-1.13.6/js/jquery.dataTables.min.js"></script>
+<link href="dados_pi_files/libs/nouislider-7.0.10/jquery.nouislider.min.css" rel="stylesheet">
+<script src="dados_pi_files/libs/nouislider-7.0.10/jquery.nouislider.min.js"></script>
+<link href="dados_pi_files/libs/selectize-0.12.0/selectize.bootstrap3.css" rel="stylesheet">
+<script src="dados_pi_files/libs/selectize-0.12.0/selectize.min.js"></script>
+<link href="dados_pi_files/libs/crosstalk-1.2.1/css/crosstalk.min.css" rel="stylesheet">
+<script src="dados_pi_files/libs/crosstalk-1.2.1/js/crosstalk.min.js"></script>
+
 
 </head>
 
@@ -124,13 +139,14 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
 <section id="bibliotecas" class="level2">
 <h2 class="anchored" data-anchor-id="bibliotecas">Bibliotecas</h2>
-<p>Carregamento dos pacotes utilizados: <code>sidrar</code> para acesso à API do SIDRA/IBGE, <code>tidyverse</code> para manipulação de dados, <code>geobr</code> e <code>sf</code> para dados geoespaciais, e <code>patchwork</code> para composição de gráficos.</p>
+<p>Do Carregamento dos pacotes utilizados: <code>sidrar</code> para acesso à API do SIDRA/IBGE, <code>tidyverse</code> para manipulação de dados, <code>geobr</code> e <code>sf</code> para dados geoespaciais, e <code>patchwork</code> para composição de gráficos.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(sidrar)</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(geobr)</span>
 <span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(sf)</span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(patchwork)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(patchwork)</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(DT)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="coleta-de-dados" class="level2">
@@ -244,6 +260,1420 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">plot_annotation</span>(<span class="at">title =</span> <span class="st">"Participação setorial no Valor Adicionado — Piauí (2021)"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="dados_pi_files/figure-html/unnamed-chunk-3-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>participacao <span class="sc">|&gt;</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">part_agro =</span> scales<span class="sc">::</span><span class="fu">percent</span>(part_agro, <span class="at">accuracy =</span> <span class="fl">0.1</span>),</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">part_ind  =</span> scales<span class="sc">::</span><span class="fu">percent</span>(part_ind,  <span class="at">accuracy =</span> <span class="fl">0.1</span>),</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">part_serv =</span> scales<span class="sc">::</span><span class="fu">percent</span>(part_serv, <span class="at">accuracy =</span> <span class="fl">0.1</span>)</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(</span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>    Município <span class="ot">=</span> MUN,</span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>    Agropecuária <span class="ot">=</span> part_agro,</span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>    Indústria <span class="ot">=</span> part_ind,</span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>    Serviços <span class="ot">=</span> part_serv</span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>  knitr<span class="sc">::</span><span class="fu">kable</span>(</span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">caption =</span> <span class="st">"Participação setorial no Valor Adicionado dos municípios do Piauí — 2021"</span></span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<table class="table table-sm table-striped">
+<caption>Participação setorial no Valor Adicionado dos municípios do Piauí — 2021</caption>
+<colgroup>
+<col style="width: 53%">
+<col style="width: 18%">
+<col style="width: 14%">
+<col style="width: 13%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Município</th>
+<th style="text-align: left;">Agropecuária</th>
+<th style="text-align: left;">Indústria</th>
+<th style="text-align: left;">Serviços</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Acauã - PI</td>
+<td style="text-align: left;">23.4%</td>
+<td style="text-align: left;">3.5%</td>
+<td style="text-align: left;">73.1%</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Agricolândia - PI</td>
+<td style="text-align: left;">16.4%</td>
+<td style="text-align: left;">7.1%</td>
+<td style="text-align: left;">76.5%</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Água Branca - PI</td>
+<td style="text-align: left;">2.4%</td>
+<td style="text-align: left;">8.1%</td>
+<td style="text-align: left;">89.6%</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Alagoinha do Piauí - PI</td>
+<td style="text-align: left;">19.3%</td>
+<td style="text-align: left;">4.2%</td>
+<td style="text-align: left;">76.5%</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Alegrete do Piauí - PI</td>
+<td style="text-align: left;">15.7%</td>
+<td style="text-align: left;">4.1%</td>
+<td style="text-align: left;">80.2%</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Alto Longá - PI</td>
+<td style="text-align: left;">16.2%</td>
+<td style="text-align: left;">4.1%</td>
+<td style="text-align: left;">79.7%</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Altos - PI</td>
+<td style="text-align: left;">2.9%</td>
+<td style="text-align: left;">11.6%</td>
+<td style="text-align: left;">85.4%</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Alvorada do Gurguéia - PI</td>
+<td style="text-align: left;">29.7%</td>
+<td style="text-align: left;">4.2%</td>
+<td style="text-align: left;">66.1%</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Amarante - PI</td>
+<td style="text-align: left;">10.5%</td>
+<td style="text-align: left;">10.1%</td>
+<td style="text-align: left;">79.4%</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Angical do Piauí - PI</td>
+<td style="text-align: left;">10.1%</td>
+<td style="text-align: left;">5.5%</td>
+<td style="text-align: left;">84.4%</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Anísio de Abreu - PI</td>
+<td style="text-align: left;">11.7%</td>
+<td style="text-align: left;">5.4%</td>
+<td style="text-align: left;">82.9%</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Antônio Almeida - PI</td>
+<td style="text-align: left;">39.0%</td>
+<td style="text-align: left;">30.4%</td>
+<td style="text-align: left;">30.6%</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Aroazes - PI</td>
+<td style="text-align: left;">13.5%</td>
+<td style="text-align: left;">5.0%</td>
+<td style="text-align: left;">81.4%</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Aroeiras do Itaim - PI</td>
+<td style="text-align: left;">15.7%</td>
+<td style="text-align: left;">4.0%</td>
+<td style="text-align: left;">80.3%</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Arraial - PI</td>
+<td style="text-align: left;">9.3%</td>
+<td style="text-align: left;">4.7%</td>
+<td style="text-align: left;">86.0%</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Assunção do Piauí - PI</td>
+<td style="text-align: left;">14.4%</td>
+<td style="text-align: left;">3.3%</td>
+<td style="text-align: left;">82.3%</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Avelino Lopes - PI</td>
+<td style="text-align: left;">13.2%</td>
+<td style="text-align: left;">4.8%</td>
+<td style="text-align: left;">82.0%</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Baixa Grande do Ribeiro - PI</td>
+<td style="text-align: left;">75.6%</td>
+<td style="text-align: left;">4.7%</td>
+<td style="text-align: left;">19.7%</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Barra D’Alcântara - PI</td>
+<td style="text-align: left;">6.6%</td>
+<td style="text-align: left;">4.9%</td>
+<td style="text-align: left;">88.5%</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Barras - PI</td>
+<td style="text-align: left;">8.4%</td>
+<td style="text-align: left;">6.0%</td>
+<td style="text-align: left;">85.6%</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Barreiras do Piauí - PI</td>
+<td style="text-align: left;">71.1%</td>
+<td style="text-align: left;">4.2%</td>
+<td style="text-align: left;">24.7%</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Barro Duro - PI</td>
+<td style="text-align: left;">21.0%</td>
+<td style="text-align: left;">11.6%</td>
+<td style="text-align: left;">67.3%</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Batalha - PI</td>
+<td style="text-align: left;">11.4%</td>
+<td style="text-align: left;">6.5%</td>
+<td style="text-align: left;">82.0%</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Bela Vista do Piauí - PI</td>
+<td style="text-align: left;">23.0%</td>
+<td style="text-align: left;">3.6%</td>
+<td style="text-align: left;">73.5%</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Belém do Piauí - PI</td>
+<td style="text-align: left;">17.4%</td>
+<td style="text-align: left;">9.1%</td>
+<td style="text-align: left;">73.5%</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Beneditinos - PI</td>
+<td style="text-align: left;">9.7%</td>
+<td style="text-align: left;">5.4%</td>
+<td style="text-align: left;">84.9%</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Bertolínia - PI</td>
+<td style="text-align: left;">10.5%</td>
+<td style="text-align: left;">15.1%</td>
+<td style="text-align: left;">74.4%</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Betânia do Piauí - PI</td>
+<td style="text-align: left;">6.7%</td>
+<td style="text-align: left;">3.3%</td>
+<td style="text-align: left;">89.9%</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Boa Hora - PI</td>
+<td style="text-align: left;">17.0%</td>
+<td style="text-align: left;">3.3%</td>
+<td style="text-align: left;">79.6%</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Bocaina - PI</td>
+<td style="text-align: left;">18.0%</td>
+<td style="text-align: left;">5.0%</td>
+<td style="text-align: left;">76.9%</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Bom Jesus - PI</td>
+<td style="text-align: left;">37.5%</td>
+<td style="text-align: left;">7.2%</td>
+<td style="text-align: left;">55.2%</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Bom Princípio do Piauí - PI</td>
+<td style="text-align: left;">27.1%</td>
+<td style="text-align: left;">4.1%</td>
+<td style="text-align: left;">68.8%</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Bonfim do Piauí - PI</td>
+<td style="text-align: left;">11.2%</td>
+<td style="text-align: left;">3.6%</td>
+<td style="text-align: left;">85.2%</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Boqueirão do Piauí - PI</td>
+<td style="text-align: left;">7.0%</td>
+<td style="text-align: left;">3.4%</td>
+<td style="text-align: left;">89.6%</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Brasileira - PI</td>
+<td style="text-align: left;">9.1%</td>
+<td style="text-align: left;">7.5%</td>
+<td style="text-align: left;">83.5%</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Brejo do Piauí - PI</td>
+<td style="text-align: left;">15.3%</td>
+<td style="text-align: left;">4.7%</td>
+<td style="text-align: left;">80.0%</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Buriti dos Lopes - PI</td>
+<td style="text-align: left;">17.5%</td>
+<td style="text-align: left;">6.8%</td>
+<td style="text-align: left;">75.7%</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Buriti dos Montes - PI</td>
+<td style="text-align: left;">15.9%</td>
+<td style="text-align: left;">4.1%</td>
+<td style="text-align: left;">80.0%</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Cabeceiras do Piauí - PI</td>
+<td style="text-align: left;">10.9%</td>
+<td style="text-align: left;">6.2%</td>
+<td style="text-align: left;">82.9%</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Cajazeiras do Piauí - PI</td>
+<td style="text-align: left;">10.0%</td>
+<td style="text-align: left;">3.5%</td>
+<td style="text-align: left;">86.5%</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Cajueiro da Praia - PI</td>
+<td style="text-align: left;">18.5%</td>
+<td style="text-align: left;">5.7%</td>
+<td style="text-align: left;">75.8%</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Caldeirão Grande do Piauí - PI</td>
+<td style="text-align: left;">12.0%</td>
+<td style="text-align: left;">64.7%</td>
+<td style="text-align: left;">23.3%</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Campinas do Piauí - PI</td>
+<td style="text-align: left;">20.6%</td>
+<td style="text-align: left;">4.3%</td>
+<td style="text-align: left;">75.1%</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Campo Alegre do Fidalgo - PI</td>
+<td style="text-align: left;">5.8%</td>
+<td style="text-align: left;">13.1%</td>
+<td style="text-align: left;">81.0%</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Campo Grande do Piauí - PI</td>
+<td style="text-align: left;">13.8%</td>
+<td style="text-align: left;">4.2%</td>
+<td style="text-align: left;">82.0%</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Campo Largo do Piauí - PI</td>
+<td style="text-align: left;">9.5%</td>
+<td style="text-align: left;">3.1%</td>
+<td style="text-align: left;">87.3%</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Campo Maior - PI</td>
+<td style="text-align: left;">5.7%</td>
+<td style="text-align: left;">8.3%</td>
+<td style="text-align: left;">86.0%</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Canavieira - PI</td>
+<td style="text-align: left;">19.0%</td>
+<td style="text-align: left;">4.1%</td>
+<td style="text-align: left;">76.8%</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Canto do Buriti - PI</td>
+<td style="text-align: left;">13.3%</td>
+<td style="text-align: left;">6.2%</td>
+<td style="text-align: left;">80.5%</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Capitão de Campos - PI</td>
+<td style="text-align: left;">5.2%</td>
+<td style="text-align: left;">4.5%</td>
+<td style="text-align: left;">90.2%</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Capitão Gervásio Oliveira - PI</td>
+<td style="text-align: left;">11.9%</td>
+<td style="text-align: left;">3.3%</td>
+<td style="text-align: left;">84.8%</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Caracol - PI</td>
+<td style="text-align: left;">7.1%</td>
+<td style="text-align: left;">4.0%</td>
+<td style="text-align: left;">88.9%</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Caraúbas do Piauí - PI</td>
+<td style="text-align: left;">16.0%</td>
+<td style="text-align: left;">3.2%</td>
+<td style="text-align: left;">80.8%</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Caridade do Piauí - PI</td>
+<td style="text-align: left;">14.6%</td>
+<td style="text-align: left;">8.3%</td>
+<td style="text-align: left;">77.2%</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Castelo do Piauí - PI</td>
+<td style="text-align: left;">13.2%</td>
+<td style="text-align: left;">6.8%</td>
+<td style="text-align: left;">80.0%</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Caxingó - PI</td>
+<td style="text-align: left;">12.7%</td>
+<td style="text-align: left;">3.9%</td>
+<td style="text-align: left;">83.4%</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Cocal - PI</td>
+<td style="text-align: left;">14.3%</td>
+<td style="text-align: left;">4.8%</td>
+<td style="text-align: left;">80.8%</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Cocal de Telha - PI</td>
+<td style="text-align: left;">6.4%</td>
+<td style="text-align: left;">3.6%</td>
+<td style="text-align: left;">90.1%</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Cocal dos Alves - PI</td>
+<td style="text-align: left;">11.3%</td>
+<td style="text-align: left;">3.9%</td>
+<td style="text-align: left;">84.8%</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Coivaras - PI</td>
+<td style="text-align: left;">10.7%</td>
+<td style="text-align: left;">4.3%</td>
+<td style="text-align: left;">85.0%</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Colônia do Gurguéia - PI</td>
+<td style="text-align: left;">7.5%</td>
+<td style="text-align: left;">4.8%</td>
+<td style="text-align: left;">87.7%</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Colônia do Piauí - PI</td>
+<td style="text-align: left;">11.7%</td>
+<td style="text-align: left;">4.5%</td>
+<td style="text-align: left;">83.9%</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Conceição do Canindé - PI</td>
+<td style="text-align: left;">30.7%</td>
+<td style="text-align: left;">4.5%</td>
+<td style="text-align: left;">64.8%</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Coronel José Dias - PI</td>
+<td style="text-align: left;">13.4%</td>
+<td style="text-align: left;">5.1%</td>
+<td style="text-align: left;">81.5%</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Corrente - PI</td>
+<td style="text-align: left;">27.1%</td>
+<td style="text-align: left;">4.4%</td>
+<td style="text-align: left;">68.5%</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Cristalândia do Piauí - PI</td>
+<td style="text-align: left;">24.1%</td>
+<td style="text-align: left;">2.9%</td>
+<td style="text-align: left;">72.9%</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Cristino Castro - PI</td>
+<td style="text-align: left;">5.8%</td>
+<td style="text-align: left;">6.1%</td>
+<td style="text-align: left;">88.0%</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Curimatá - PI</td>
+<td style="text-align: left;">14.2%</td>
+<td style="text-align: left;">8.5%</td>
+<td style="text-align: left;">77.2%</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Currais - PI</td>
+<td style="text-align: left;">77.7%</td>
+<td style="text-align: left;">4.1%</td>
+<td style="text-align: left;">18.2%</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Curralinhos - PI</td>
+<td style="text-align: left;">16.2%</td>
+<td style="text-align: left;">3.3%</td>
+<td style="text-align: left;">80.5%</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Curral Novo do Piauí - PI</td>
+<td style="text-align: left;">9.0%</td>
+<td style="text-align: left;">29.7%</td>
+<td style="text-align: left;">61.3%</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Demerval Lobão - PI</td>
+<td style="text-align: left;">1.8%</td>
+<td style="text-align: left;">25.8%</td>
+<td style="text-align: left;">72.4%</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Dirceu Arcoverde - PI</td>
+<td style="text-align: left;">11.2%</td>
+<td style="text-align: left;">4.0%</td>
+<td style="text-align: left;">84.9%</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Dom Expedito Lopes - PI</td>
+<td style="text-align: left;">7.8%</td>
+<td style="text-align: left;">5.8%</td>
+<td style="text-align: left;">86.4%</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Domingos Mourão - PI</td>
+<td style="text-align: left;">14.6%</td>
+<td style="text-align: left;">5.0%</td>
+<td style="text-align: left;">80.5%</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Dom Inocêncio - PI</td>
+<td style="text-align: left;">7.3%</td>
+<td style="text-align: left;">44.5%</td>
+<td style="text-align: left;">48.3%</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Elesbão Veloso - PI</td>
+<td style="text-align: left;">12.6%</td>
+<td style="text-align: left;">5.6%</td>
+<td style="text-align: left;">81.9%</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Eliseu Martins - PI</td>
+<td style="text-align: left;">10.6%</td>
+<td style="text-align: left;">6.9%</td>
+<td style="text-align: left;">82.5%</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Esperantina - PI</td>
+<td style="text-align: left;">4.0%</td>
+<td style="text-align: left;">7.2%</td>
+<td style="text-align: left;">88.8%</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Fartura do Piauí - PI</td>
+<td style="text-align: left;">13.9%</td>
+<td style="text-align: left;">2.8%</td>
+<td style="text-align: left;">83.3%</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Flores do Piauí - PI</td>
+<td style="text-align: left;">13.4%</td>
+<td style="text-align: left;">7.2%</td>
+<td style="text-align: left;">79.5%</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Floresta do Piauí - PI</td>
+<td style="text-align: left;">13.5%</td>
+<td style="text-align: left;">3.4%</td>
+<td style="text-align: left;">83.1%</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Floriano - PI</td>
+<td style="text-align: left;">1.7%</td>
+<td style="text-align: left;">8.1%</td>
+<td style="text-align: left;">90.1%</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Francinópolis - PI</td>
+<td style="text-align: left;">9.1%</td>
+<td style="text-align: left;">5.0%</td>
+<td style="text-align: left;">85.9%</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Francisco Ayres - PI</td>
+<td style="text-align: left;">15.1%</td>
+<td style="text-align: left;">4.8%</td>
+<td style="text-align: left;">80.1%</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Francisco Macedo - PI</td>
+<td style="text-align: left;">6.5%</td>
+<td style="text-align: left;">3.8%</td>
+<td style="text-align: left;">89.7%</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Francisco Santos - PI</td>
+<td style="text-align: left;">9.7%</td>
+<td style="text-align: left;">6.3%</td>
+<td style="text-align: left;">83.9%</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Fronteiras - PI</td>
+<td style="text-align: left;">7.6%</td>
+<td style="text-align: left;">14.3%</td>
+<td style="text-align: left;">78.1%</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Geminiano - PI</td>
+<td style="text-align: left;">22.4%</td>
+<td style="text-align: left;">10.0%</td>
+<td style="text-align: left;">67.6%</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Gilbués - PI</td>
+<td style="text-align: left;">59.6%</td>
+<td style="text-align: left;">4.4%</td>
+<td style="text-align: left;">36.1%</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Guadalupe - PI</td>
+<td style="text-align: left;">32.0%</td>
+<td style="text-align: left;">49.4%</td>
+<td style="text-align: left;">18.6%</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Guaribas - PI</td>
+<td style="text-align: left;">13.5%</td>
+<td style="text-align: left;">4.2%</td>
+<td style="text-align: left;">82.2%</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Hugo Napoleão - PI</td>
+<td style="text-align: left;">9.9%</td>
+<td style="text-align: left;">5.5%</td>
+<td style="text-align: left;">84.6%</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Ilha Grande - PI</td>
+<td style="text-align: left;">12.0%</td>
+<td style="text-align: left;">30.7%</td>
+<td style="text-align: left;">57.3%</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Inhuma - PI</td>
+<td style="text-align: left;">15.5%</td>
+<td style="text-align: left;">6.8%</td>
+<td style="text-align: left;">77.7%</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Ipiranga do Piauí - PI</td>
+<td style="text-align: left;">9.9%</td>
+<td style="text-align: left;">6.5%</td>
+<td style="text-align: left;">83.6%</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Isaías Coelho - PI</td>
+<td style="text-align: left;">14.0%</td>
+<td style="text-align: left;">3.8%</td>
+<td style="text-align: left;">82.2%</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Itainópolis - PI</td>
+<td style="text-align: left;">21.8%</td>
+<td style="text-align: left;">4.7%</td>
+<td style="text-align: left;">73.6%</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Itaueira - PI</td>
+<td style="text-align: left;">14.8%</td>
+<td style="text-align: left;">5.5%</td>
+<td style="text-align: left;">79.7%</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Jacobina do Piauí - PI</td>
+<td style="text-align: left;">23.3%</td>
+<td style="text-align: left;">5.4%</td>
+<td style="text-align: left;">71.2%</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Jaicós - PI</td>
+<td style="text-align: left;">16.1%</td>
+<td style="text-align: left;">5.2%</td>
+<td style="text-align: left;">78.7%</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Jardim do Mulato - PI</td>
+<td style="text-align: left;">10.8%</td>
+<td style="text-align: left;">4.1%</td>
+<td style="text-align: left;">85.2%</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Jatobá do Piauí - PI</td>
+<td style="text-align: left;">28.0%</td>
+<td style="text-align: left;">4.1%</td>
+<td style="text-align: left;">67.9%</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Jerumenha - PI</td>
+<td style="text-align: left;">29.2%</td>
+<td style="text-align: left;">4.7%</td>
+<td style="text-align: left;">66.1%</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">João Costa - PI</td>
+<td style="text-align: left;">13.9%</td>
+<td style="text-align: left;">48.4%</td>
+<td style="text-align: left;">37.7%</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Joaquim Pires - PI</td>
+<td style="text-align: left;">12.8%</td>
+<td style="text-align: left;">4.6%</td>
+<td style="text-align: left;">82.5%</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Joca Marques - PI</td>
+<td style="text-align: left;">10.1%</td>
+<td style="text-align: left;">3.6%</td>
+<td style="text-align: left;">86.3%</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">José de Freitas - PI</td>
+<td style="text-align: left;">10.3%</td>
+<td style="text-align: left;">6.9%</td>
+<td style="text-align: left;">82.9%</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Juazeiro do Piauí - PI</td>
+<td style="text-align: left;">13.6%</td>
+<td style="text-align: left;">6.3%</td>
+<td style="text-align: left;">80.1%</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Júlio Borges - PI</td>
+<td style="text-align: left;">12.1%</td>
+<td style="text-align: left;">28.4%</td>
+<td style="text-align: left;">59.5%</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Jurema - PI</td>
+<td style="text-align: left;">10.9%</td>
+<td style="text-align: left;">4.5%</td>
+<td style="text-align: left;">84.6%</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Lagoinha do Piauí - PI</td>
+<td style="text-align: left;">4.0%</td>
+<td style="text-align: left;">4.2%</td>
+<td style="text-align: left;">91.8%</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Lagoa Alegre - PI</td>
+<td style="text-align: left;">7.5%</td>
+<td style="text-align: left;">4.7%</td>
+<td style="text-align: left;">87.8%</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Lagoa do Barro do Piauí - PI</td>
+<td style="text-align: left;">1.1%</td>
+<td style="text-align: left;">80.0%</td>
+<td style="text-align: left;">18.9%</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Lagoa de São Francisco - PI</td>
+<td style="text-align: left;">7.5%</td>
+<td style="text-align: left;">3.5%</td>
+<td style="text-align: left;">88.9%</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Lagoa do Piauí - PI</td>
+<td style="text-align: left;">6.2%</td>
+<td style="text-align: left;">19.9%</td>
+<td style="text-align: left;">73.9%</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Lagoa do Sítio - PI</td>
+<td style="text-align: left;">22.8%</td>
+<td style="text-align: left;">3.7%</td>
+<td style="text-align: left;">73.5%</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Landri Sales - PI</td>
+<td style="text-align: left;">45.6%</td>
+<td style="text-align: left;">6.9%</td>
+<td style="text-align: left;">47.6%</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Luís Correia - PI</td>
+<td style="text-align: left;">10.3%</td>
+<td style="text-align: left;">7.9%</td>
+<td style="text-align: left;">81.9%</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Luzilândia - PI</td>
+<td style="text-align: left;">8.0%</td>
+<td style="text-align: left;">5.2%</td>
+<td style="text-align: left;">86.7%</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Madeiro - PI</td>
+<td style="text-align: left;">8.9%</td>
+<td style="text-align: left;">3.4%</td>
+<td style="text-align: left;">87.7%</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Manoel Emídio - PI</td>
+<td style="text-align: left;">12.8%</td>
+<td style="text-align: left;">5.7%</td>
+<td style="text-align: left;">81.5%</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Marcolândia - PI</td>
+<td style="text-align: left;">5.4%</td>
+<td style="text-align: left;">52.0%</td>
+<td style="text-align: left;">42.5%</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Marcos Parente - PI</td>
+<td style="text-align: left;">8.9%</td>
+<td style="text-align: left;">6.0%</td>
+<td style="text-align: left;">85.1%</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Massapê do Piauí - PI</td>
+<td style="text-align: left;">11.4%</td>
+<td style="text-align: left;">3.5%</td>
+<td style="text-align: left;">85.0%</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Matias Olímpio - PI</td>
+<td style="text-align: left;">6.1%</td>
+<td style="text-align: left;">4.7%</td>
+<td style="text-align: left;">89.1%</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Miguel Alves - PI</td>
+<td style="text-align: left;">12.2%</td>
+<td style="text-align: left;">4.3%</td>
+<td style="text-align: left;">83.5%</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Miguel Leão - PI</td>
+<td style="text-align: left;">3.7%</td>
+<td style="text-align: left;">7.7%</td>
+<td style="text-align: left;">88.6%</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Milton Brandão - PI</td>
+<td style="text-align: left;">13.6%</td>
+<td style="text-align: left;">3.2%</td>
+<td style="text-align: left;">83.2%</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Monsenhor Gil - PI</td>
+<td style="text-align: left;">8.2%</td>
+<td style="text-align: left;">7.2%</td>
+<td style="text-align: left;">84.6%</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Monsenhor Hipólito - PI</td>
+<td style="text-align: left;">18.4%</td>
+<td style="text-align: left;">4.6%</td>
+<td style="text-align: left;">76.9%</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Monte Alegre do Piauí - PI</td>
+<td style="text-align: left;">56.5%</td>
+<td style="text-align: left;">4.1%</td>
+<td style="text-align: left;">39.4%</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Morro Cabeça no Tempo - PI</td>
+<td style="text-align: left;">15.4%</td>
+<td style="text-align: left;">3.6%</td>
+<td style="text-align: left;">81.0%</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Morro do Chapéu do Piauí - PI</td>
+<td style="text-align: left;">8.8%</td>
+<td style="text-align: left;">4.9%</td>
+<td style="text-align: left;">86.4%</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Murici dos Portelas - PI</td>
+<td style="text-align: left;">12.8%</td>
+<td style="text-align: left;">3.4%</td>
+<td style="text-align: left;">83.7%</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Nazaré do Piauí - PI</td>
+<td style="text-align: left;">8.4%</td>
+<td style="text-align: left;">4.9%</td>
+<td style="text-align: left;">86.7%</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Nazária - PI</td>
+<td style="text-align: left;">7.6%</td>
+<td style="text-align: left;">11.6%</td>
+<td style="text-align: left;">80.8%</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Nossa Senhora de Nazaré - PI</td>
+<td style="text-align: left;">13.5%</td>
+<td style="text-align: left;">3.7%</td>
+<td style="text-align: left;">82.7%</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Nossa Senhora dos Remédios - PI</td>
+<td style="text-align: left;">7.3%</td>
+<td style="text-align: left;">3.9%</td>
+<td style="text-align: left;">88.8%</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Novo Oriente do Piauí - PI</td>
+<td style="text-align: left;">10.2%</td>
+<td style="text-align: left;">5.2%</td>
+<td style="text-align: left;">84.5%</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Novo Santo Antônio - PI</td>
+<td style="text-align: left;">18.0%</td>
+<td style="text-align: left;">3.4%</td>
+<td style="text-align: left;">78.5%</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Oeiras - PI</td>
+<td style="text-align: left;">3.8%</td>
+<td style="text-align: left;">8.1%</td>
+<td style="text-align: left;">88.2%</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Olho D’Água do Piauí - PI</td>
+<td style="text-align: left;">26.8%</td>
+<td style="text-align: left;">4.1%</td>
+<td style="text-align: left;">69.1%</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Padre Marcos - PI</td>
+<td style="text-align: left;">10.8%</td>
+<td style="text-align: left;">7.4%</td>
+<td style="text-align: left;">81.9%</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Paes Landim - PI</td>
+<td style="text-align: left;">14.2%</td>
+<td style="text-align: left;">5.4%</td>
+<td style="text-align: left;">80.4%</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Pajeú do Piauí - PI</td>
+<td style="text-align: left;">37.5%</td>
+<td style="text-align: left;">4.7%</td>
+<td style="text-align: left;">57.8%</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Palmeira do Piauí - PI</td>
+<td style="text-align: left;">64.8%</td>
+<td style="text-align: left;">4.2%</td>
+<td style="text-align: left;">31.0%</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Palmeirais - PI</td>
+<td style="text-align: left;">15.6%</td>
+<td style="text-align: left;">5.6%</td>
+<td style="text-align: left;">78.8%</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Paquetá - PI</td>
+<td style="text-align: left;">10.8%</td>
+<td style="text-align: left;">4.1%</td>
+<td style="text-align: left;">85.1%</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Parnaguá - PI</td>
+<td style="text-align: left;">27.6%</td>
+<td style="text-align: left;">4.1%</td>
+<td style="text-align: left;">68.3%</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Parnaíba - PI</td>
+<td style="text-align: left;">2.8%</td>
+<td style="text-align: left;">13.7%</td>
+<td style="text-align: left;">83.5%</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Passagem Franca do Piauí - PI</td>
+<td style="text-align: left;">23.0%</td>
+<td style="text-align: left;">4.1%</td>
+<td style="text-align: left;">72.9%</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Patos do Piauí - PI</td>
+<td style="text-align: left;">23.8%</td>
+<td style="text-align: left;">5.1%</td>
+<td style="text-align: left;">71.1%</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Pau D’Arco do Piauí - PI</td>
+<td style="text-align: left;">12.7%</td>
+<td style="text-align: left;">4.3%</td>
+<td style="text-align: left;">83.0%</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Paulistana - PI</td>
+<td style="text-align: left;">6.8%</td>
+<td style="text-align: left;">7.6%</td>
+<td style="text-align: left;">85.6%</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Pavussu - PI</td>
+<td style="text-align: left;">16.2%</td>
+<td style="text-align: left;">4.9%</td>
+<td style="text-align: left;">78.9%</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Pedro II - PI</td>
+<td style="text-align: left;">4.0%</td>
+<td style="text-align: left;">5.8%</td>
+<td style="text-align: left;">90.2%</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Pedro Laurentino - PI</td>
+<td style="text-align: left;">16.2%</td>
+<td style="text-align: left;">5.7%</td>
+<td style="text-align: left;">78.1%</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Nova Santa Rita - PI</td>
+<td style="text-align: left;">13.2%</td>
+<td style="text-align: left;">4.3%</td>
+<td style="text-align: left;">82.6%</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Picos - PI</td>
+<td style="text-align: left;">3.1%</td>
+<td style="text-align: left;">11.3%</td>
+<td style="text-align: left;">85.5%</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Pimenteiras - PI</td>
+<td style="text-align: left;">21.4%</td>
+<td style="text-align: left;">4.7%</td>
+<td style="text-align: left;">73.9%</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Pio IX - PI</td>
+<td style="text-align: left;">22.7%</td>
+<td style="text-align: left;">5.0%</td>
+<td style="text-align: left;">72.3%</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Piracuruca - PI</td>
+<td style="text-align: left;">9.0%</td>
+<td style="text-align: left;">8.0%</td>
+<td style="text-align: left;">83.0%</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Piripiri - PI</td>
+<td style="text-align: left;">2.7%</td>
+<td style="text-align: left;">13.1%</td>
+<td style="text-align: left;">84.2%</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Porto - PI</td>
+<td style="text-align: left;">5.8%</td>
+<td style="text-align: left;">14.6%</td>
+<td style="text-align: left;">79.6%</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Porto Alegre do Piauí - PI</td>
+<td style="text-align: left;">30.7%</td>
+<td style="text-align: left;">3.8%</td>
+<td style="text-align: left;">65.6%</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Prata do Piauí - PI</td>
+<td style="text-align: left;">6.3%</td>
+<td style="text-align: left;">5.4%</td>
+<td style="text-align: left;">88.3%</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Queimada Nova - PI</td>
+<td style="text-align: left;">3.1%</td>
+<td style="text-align: left;">57.8%</td>
+<td style="text-align: left;">39.1%</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Redenção do Gurguéia - PI</td>
+<td style="text-align: left;">20.2%</td>
+<td style="text-align: left;">3.8%</td>
+<td style="text-align: left;">76.0%</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Regeneração - PI</td>
+<td style="text-align: left;">39.9%</td>
+<td style="text-align: left;">4.3%</td>
+<td style="text-align: left;">55.8%</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Riacho Frio - PI</td>
+<td style="text-align: left;">22.8%</td>
+<td style="text-align: left;">3.8%</td>
+<td style="text-align: left;">73.3%</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Ribeira do Piauí - PI</td>
+<td style="text-align: left;">2.8%</td>
+<td style="text-align: left;">80.7%</td>
+<td style="text-align: left;">16.6%</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Ribeiro Gonçalves - PI</td>
+<td style="text-align: left;">78.3%</td>
+<td style="text-align: left;">4.4%</td>
+<td style="text-align: left;">17.3%</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Rio Grande do Piauí - PI</td>
+<td style="text-align: left;">13.4%</td>
+<td style="text-align: left;">5.4%</td>
+<td style="text-align: left;">81.2%</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Santa Cruz do Piauí - PI</td>
+<td style="text-align: left;">9.5%</td>
+<td style="text-align: left;">5.0%</td>
+<td style="text-align: left;">85.6%</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Santa Cruz dos Milagres - PI</td>
+<td style="text-align: left;">22.5%</td>
+<td style="text-align: left;">5.2%</td>
+<td style="text-align: left;">72.3%</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Santa Filomena - PI</td>
+<td style="text-align: left;">71.9%</td>
+<td style="text-align: left;">6.1%</td>
+<td style="text-align: left;">22.0%</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Santa Luz - PI</td>
+<td style="text-align: left;">25.3%</td>
+<td style="text-align: left;">5.2%</td>
+<td style="text-align: left;">69.4%</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Santana do Piauí - PI</td>
+<td style="text-align: left;">14.8%</td>
+<td style="text-align: left;">4.5%</td>
+<td style="text-align: left;">80.7%</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Santa Rosa do Piauí - PI</td>
+<td style="text-align: left;">10.7%</td>
+<td style="text-align: left;">10.5%</td>
+<td style="text-align: left;">78.8%</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Santo Antônio de Lisboa - PI</td>
+<td style="text-align: left;">9.7%</td>
+<td style="text-align: left;">16.8%</td>
+<td style="text-align: left;">73.5%</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Santo Antônio dos Milagres - PI</td>
+<td style="text-align: left;">3.8%</td>
+<td style="text-align: left;">4.6%</td>
+<td style="text-align: left;">91.7%</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Santo Inácio do Piauí - PI</td>
+<td style="text-align: left;">17.3%</td>
+<td style="text-align: left;">4.9%</td>
+<td style="text-align: left;">77.7%</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">São Braz do Piauí - PI</td>
+<td style="text-align: left;">16.2%</td>
+<td style="text-align: left;">3.8%</td>
+<td style="text-align: left;">80.0%</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">São Félix do Piauí - PI</td>
+<td style="text-align: left;">14.1%</td>
+<td style="text-align: left;">5.3%</td>
+<td style="text-align: left;">80.6%</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">São Francisco de Assis do Piauí - PI</td>
+<td style="text-align: left;">12.0%</td>
+<td style="text-align: left;">4.0%</td>
+<td style="text-align: left;">84.0%</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">São Francisco do Piauí - PI</td>
+<td style="text-align: left;">12.2%</td>
+<td style="text-align: left;">4.2%</td>
+<td style="text-align: left;">83.6%</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">São Gonçalo do Gurguéia - PI</td>
+<td style="text-align: left;">21.3%</td>
+<td style="text-align: left;">3.8%</td>
+<td style="text-align: left;">75.0%</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">São Gonçalo do Piauí - PI</td>
+<td style="text-align: left;">27.7%</td>
+<td style="text-align: left;">5.3%</td>
+<td style="text-align: left;">67.0%</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">São João da Canabrava - PI</td>
+<td style="text-align: left;">15.8%</td>
+<td style="text-align: left;">4.6%</td>
+<td style="text-align: left;">79.6%</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">São João da Fronteira - PI</td>
+<td style="text-align: left;">7.2%</td>
+<td style="text-align: left;">3.4%</td>
+<td style="text-align: left;">89.4%</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">São João da Serra - PI</td>
+<td style="text-align: left;">14.8%</td>
+<td style="text-align: left;">4.6%</td>
+<td style="text-align: left;">80.6%</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">São João da Varjota - PI</td>
+<td style="text-align: left;">6.6%</td>
+<td style="text-align: left;">4.1%</td>
+<td style="text-align: left;">89.3%</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">São João do Arraial - PI</td>
+<td style="text-align: left;">5.4%</td>
+<td style="text-align: left;">3.5%</td>
+<td style="text-align: left;">91.0%</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">São João do Piauí - PI</td>
+<td style="text-align: left;">2.7%</td>
+<td style="text-align: left;">41.2%</td>
+<td style="text-align: left;">56.1%</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">São José do Divino - PI</td>
+<td style="text-align: left;">28.6%</td>
+<td style="text-align: left;">4.0%</td>
+<td style="text-align: left;">67.3%</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">São José do Peixe - PI</td>
+<td style="text-align: left;">14.9%</td>
+<td style="text-align: left;">4.6%</td>
+<td style="text-align: left;">80.5%</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">São José do Piauí - PI</td>
+<td style="text-align: left;">20.2%</td>
+<td style="text-align: left;">5.4%</td>
+<td style="text-align: left;">74.4%</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">São Julião - PI</td>
+<td style="text-align: left;">10.7%</td>
+<td style="text-align: left;">8.0%</td>
+<td style="text-align: left;">81.3%</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">São Lourenço do Piauí - PI</td>
+<td style="text-align: left;">12.1%</td>
+<td style="text-align: left;">4.1%</td>
+<td style="text-align: left;">83.8%</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">São Luis do Piauí - PI</td>
+<td style="text-align: left;">12.8%</td>
+<td style="text-align: left;">4.6%</td>
+<td style="text-align: left;">82.6%</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">São Miguel da Baixa Grande - PI</td>
+<td style="text-align: left;">11.1%</td>
+<td style="text-align: left;">3.8%</td>
+<td style="text-align: left;">85.1%</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">São Miguel do Fidalgo - PI</td>
+<td style="text-align: left;">8.0%</td>
+<td style="text-align: left;">34.3%</td>
+<td style="text-align: left;">57.7%</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">São Miguel do Tapuio - PI</td>
+<td style="text-align: left;">13.1%</td>
+<td style="text-align: left;">4.6%</td>
+<td style="text-align: left;">82.3%</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">São Pedro do Piauí - PI</td>
+<td style="text-align: left;">9.6%</td>
+<td style="text-align: left;">5.5%</td>
+<td style="text-align: left;">84.9%</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">São Raimundo Nonato - PI</td>
+<td style="text-align: left;">4.6%</td>
+<td style="text-align: left;">8.8%</td>
+<td style="text-align: left;">86.6%</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Sebastião Barros - PI</td>
+<td style="text-align: left;">29.0%</td>
+<td style="text-align: left;">2.8%</td>
+<td style="text-align: left;">68.1%</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Sebastião Leal - PI</td>
+<td style="text-align: left;">68.4%</td>
+<td style="text-align: left;">4.6%</td>
+<td style="text-align: left;">26.9%</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Sigefredo Pacheco - PI</td>
+<td style="text-align: left;">10.6%</td>
+<td style="text-align: left;">3.6%</td>
+<td style="text-align: left;">85.8%</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Simões - PI</td>
+<td style="text-align: left;">5.6%</td>
+<td style="text-align: left;">63.5%</td>
+<td style="text-align: left;">30.9%</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Simplício Mendes - PI</td>
+<td style="text-align: left;">12.1%</td>
+<td style="text-align: left;">6.4%</td>
+<td style="text-align: left;">81.6%</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Socorro do Piauí - PI</td>
+<td style="text-align: left;">11.7%</td>
+<td style="text-align: left;">5.1%</td>
+<td style="text-align: left;">83.2%</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Sussuapara - PI</td>
+<td style="text-align: left;">24.9%</td>
+<td style="text-align: left;">5.0%</td>
+<td style="text-align: left;">70.0%</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Tamboril do Piauí - PI</td>
+<td style="text-align: left;">11.0%</td>
+<td style="text-align: left;">3.6%</td>
+<td style="text-align: left;">85.4%</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Tanque do Piauí - PI</td>
+<td style="text-align: left;">22.6%</td>
+<td style="text-align: left;">4.0%</td>
+<td style="text-align: left;">73.4%</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Teresina - PI</td>
+<td style="text-align: left;">0.3%</td>
+<td style="text-align: left;">17.2%</td>
+<td style="text-align: left;">82.6%</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">União - PI</td>
+<td style="text-align: left;">8.3%</td>
+<td style="text-align: left;">7.2%</td>
+<td style="text-align: left;">84.5%</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Uruçuí - PI</td>
+<td style="text-align: left;">46.3%</td>
+<td style="text-align: left;">22.0%</td>
+<td style="text-align: left;">31.7%</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Valença do Piauí - PI</td>
+<td style="text-align: left;">7.2%</td>
+<td style="text-align: left;">8.2%</td>
+<td style="text-align: left;">84.6%</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Várzea Branca - PI</td>
+<td style="text-align: left;">14.5%</td>
+<td style="text-align: left;">3.5%</td>
+<td style="text-align: left;">82.0%</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Várzea Grande - PI</td>
+<td style="text-align: left;">13.5%</td>
+<td style="text-align: left;">5.1%</td>
+<td style="text-align: left;">81.3%</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Vera Mendes - PI</td>
+<td style="text-align: left;">15.6%</td>
+<td style="text-align: left;">3.8%</td>
+<td style="text-align: left;">80.6%</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Vila Nova do Piauí - PI</td>
+<td style="text-align: left;">18.5%</td>
+<td style="text-align: left;">4.4%</td>
+<td style="text-align: left;">77.1%</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Wall Ferraz - PI</td>
+<td style="text-align: left;">12.5%</td>
+<td style="text-align: left;">4.3%</td>
+<td style="text-align: left;">83.2%</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Tabela de participação setorial</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="co">#| message: false</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>participacao <span class="sc">|&gt;</span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">part_agro =</span> scales<span class="sc">::</span><span class="fu">percent</span>(part_agro, <span class="at">accuracy =</span> <span class="fl">0.1</span>),</span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">part_ind  =</span> scales<span class="sc">::</span><span class="fu">percent</span>(part_ind,  <span class="at">accuracy =</span> <span class="fl">0.1</span>),</span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">part_serv =</span> scales<span class="sc">::</span><span class="fu">percent</span>(part_serv, <span class="at">accuracy =</span> <span class="fl">0.1</span>)</span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(</span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>    Município <span class="ot">=</span> MUN,</span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>    Agropecuária <span class="ot">=</span> part_agro,</span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>    Indústria <span class="ot">=</span> part_ind,</span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a>    Serviços <span class="ot">=</span> part_serv</span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">datatable</span>(</span>
+<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a>    <span class="at">caption =</span> <span class="st">"Participação setorial no Valor Adicionado dos municípios do Piauí — 2021"</span>,</span>
+<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a>    <span class="at">rownames =</span> <span class="cn">FALSE</span>,</span>
+<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a>    <span class="at">filter =</span> <span class="st">"top"</span>,</span>
+<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a>    <span class="at">options =</span> <span class="fu">list</span>(</span>
+<span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a>      <span class="at">pageLength =</span> <span class="dv">10</span>,</span>
+<span id="cb5-23"><a href="#cb5-23" aria-hidden="true" tabindex="-1"></a>      <span class="at">language =</span> <span class="fu">list</span>(<span class="at">url =</span> <span class="st">"//cdn.datatables.net/plug-ins/1.13.6/i18n/pt-BR.json"</span>)</span>
+<span id="cb5-24"><a href="#cb5-24" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb5-25"><a href="#cb5-25" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+
+<div class="datatables html-widget html-fill-item" id="htmlwidget-3a1808a5032be9035728" style="width:100%;height:auto;"></div>
+<script type="application/json" data-for="htmlwidget-3a1808a5032be9035728">{"x":{"filter":"top","vertical":false,"filterHTML":"<tr>\n  <td data-type=\"character\" style=\"vertical-align: top;\">\n    <div class=\"form-group has-feedback\" style=\"margin-bottom: auto;\">\n      <input type=\"search\" placeholder=\"All\" class=\"form-control\" style=\"width: 100%;\"/>\n      <span class=\"glyphicon glyphicon-remove-circle form-control-feedback\"><\/span>\n    <\/div>\n  <\/td>\n  <td data-type=\"character\" style=\"vertical-align: top;\">\n    <div class=\"form-group has-feedback\" style=\"margin-bottom: auto;\">\n      <input type=\"search\" placeholder=\"All\" class=\"form-control\" style=\"width: 100%;\"/>\n      <span class=\"glyphicon glyphicon-remove-circle form-control-feedback\"><\/span>\n    <\/div>\n  <\/td>\n  <td data-type=\"character\" style=\"vertical-align: top;\">\n    <div class=\"form-group has-feedback\" style=\"margin-bottom: auto;\">\n      <input type=\"search\" placeholder=\"All\" class=\"form-control\" style=\"width: 100%;\"/>\n      <span class=\"glyphicon glyphicon-remove-circle form-control-feedback\"><\/span>\n    <\/div>\n  <\/td>\n  <td data-type=\"character\" style=\"vertical-align: top;\">\n    <div class=\"form-group has-feedback\" style=\"margin-bottom: auto;\">\n      <input type=\"search\" placeholder=\"All\" class=\"form-control\" style=\"width: 100%;\"/>\n      <span class=\"glyphicon glyphicon-remove-circle form-control-feedback\"><\/span>\n    <\/div>\n  <\/td>\n<\/tr>","caption":"<caption>Participação setorial no Valor Adicionado dos municípios do Piauí — 2021<\/caption>","data":[["Acauã - PI","Agricolândia - PI","Água Branca - PI","Alagoinha do Piauí - PI","Alegrete do Piauí - PI","Alto Longá - PI","Altos - PI","Alvorada do Gurguéia - PI","Amarante - PI","Angical do Piauí - PI","Anísio de Abreu - PI","Antônio Almeida - PI","Aroazes - PI","Aroeiras do Itaim - PI","Arraial - PI","Assunção do Piauí - PI","Avelino Lopes - PI","Baixa Grande do Ribeiro - PI","Barra D'Alcântara - PI","Barras - PI","Barreiras do Piauí - PI","Barro Duro - PI","Batalha - PI","Bela Vista do Piauí - PI","Belém do Piauí - PI","Beneditinos - PI","Bertolínia - PI","Betânia do Piauí - PI","Boa Hora - PI","Bocaina - PI","Bom Jesus - PI","Bom Princípio do Piauí - PI","Bonfim do Piauí - PI","Boqueirão do Piauí - PI","Brasileira - PI","Brejo do Piauí - PI","Buriti dos Lopes - PI","Buriti dos Montes - PI","Cabeceiras do Piauí - PI","Cajazeiras do Piauí - PI","Cajueiro da Praia - PI","Caldeirão Grande do Piauí - PI","Campinas do Piauí - PI","Campo Alegre do Fidalgo - PI","Campo Grande do Piauí - PI","Campo Largo do Piauí - PI","Campo Maior - PI","Canavieira - PI","Canto do Buriti - PI","Capitão de Campos - PI","Capitão Gervásio Oliveira - PI","Caracol - PI","Caraúbas do Piauí - PI","Caridade do Piauí - PI","Castelo do Piauí - PI","Caxingó - PI","Cocal - PI","Cocal de Telha - PI","Cocal dos Alves - PI","Coivaras - PI","Colônia do Gurguéia - PI","Colônia do Piauí - PI","Conceição do Canindé - PI","Coronel José Dias - PI","Corrente - PI","Cristalândia do Piauí - PI","Cristino Castro - PI","Curimatá - PI","Currais - PI","Curralinhos - PI","Curral Novo do Piauí - PI","Demerval Lobão - PI","Dirceu Arcoverde - PI","Dom Expedito Lopes - PI","Domingos Mourão - PI","Dom Inocêncio - PI","Elesbão Veloso - PI","Eliseu Martins - PI","Esperantina - PI","Fartura do Piauí - PI","Flores do Piauí - PI","Floresta do Piauí - PI","Floriano - PI","Francinópolis - PI","Francisco Ayres - PI","Francisco Macedo - PI","Francisco Santos - PI","Fronteiras - PI","Geminiano - PI","Gilbués - PI","Guadalupe - PI","Guaribas - PI","Hugo Napoleão - PI","Ilha Grande - PI","Inhuma - PI","Ipiranga do Piauí - PI","Isaías Coelho - PI","Itainópolis - PI","Itaueira - PI","Jacobina do Piauí - PI","Jaicós - PI","Jardim do Mulato - PI","Jatobá do Piauí - PI","Jerumenha - PI","João Costa - PI","Joaquim Pires - PI","Joca Marques - PI","José de Freitas - PI","Juazeiro do Piauí - PI","Júlio Borges - PI","Jurema - PI","Lagoinha do Piauí - PI","Lagoa Alegre - PI","Lagoa do Barro do Piauí - PI","Lagoa de São Francisco - PI","Lagoa do Piauí - PI","Lagoa do Sítio - PI","Landri Sales - PI","Luís Correia - PI","Luzilândia - PI","Madeiro - PI","Manoel Emídio - PI","Marcolândia - PI","Marcos Parente - PI","Massapê do Piauí - PI","Matias Olímpio - PI","Miguel Alves - PI","Miguel Leão - PI","Milton Brandão - PI","Monsenhor Gil - PI","Monsenhor Hipólito - PI","Monte Alegre do Piauí - PI","Morro Cabeça no Tempo - PI","Morro do Chapéu do Piauí - PI","Murici dos Portelas - PI","Nazaré do Piauí - PI","Nazária - PI","Nossa Senhora de Nazaré - PI","Nossa Senhora dos Remédios - PI","Novo Oriente do Piauí - PI","Novo Santo Antônio - PI","Oeiras - PI","Olho D'Água do Piauí - PI","Padre Marcos - PI","Paes Landim - PI","Pajeú do Piauí - PI","Palmeira do Piauí - PI","Palmeirais - PI","Paquetá - PI","Parnaguá - PI","Parnaíba - PI","Passagem Franca do Piauí - PI","Patos do Piauí - PI","Pau D'Arco do Piauí - PI","Paulistana - PI","Pavussu - PI","Pedro II - PI","Pedro Laurentino - PI","Nova Santa Rita - PI","Picos - PI","Pimenteiras - PI","Pio IX - PI","Piracuruca - PI","Piripiri - PI","Porto - PI","Porto Alegre do Piauí - PI","Prata do Piauí - PI","Queimada Nova - PI","Redenção do Gurguéia - PI","Regeneração - PI","Riacho Frio - PI","Ribeira do Piauí - PI","Ribeiro Gonçalves - PI","Rio Grande do Piauí - PI","Santa Cruz do Piauí - PI","Santa Cruz dos Milagres - PI","Santa Filomena - PI","Santa Luz - PI","Santana do Piauí - PI","Santa Rosa do Piauí - PI","Santo Antônio de Lisboa - PI","Santo Antônio dos Milagres - PI","Santo Inácio do Piauí - PI","São Braz do Piauí - PI","São Félix do Piauí - PI","São Francisco de Assis do Piauí - PI","São Francisco do Piauí - PI","São Gonçalo do Gurguéia - PI","São Gonçalo do Piauí - PI","São João da Canabrava - PI","São João da Fronteira - PI","São João da Serra - PI","São João da Varjota - PI","São João do Arraial - PI","São João do Piauí - PI","São José do Divino - PI","São José do Peixe - PI","São José do Piauí - PI","São Julião - PI","São Lourenço do Piauí - PI","São Luis do Piauí - PI","São Miguel da Baixa Grande - PI","São Miguel do Fidalgo - PI","São Miguel do Tapuio - PI","São Pedro do Piauí - PI","São Raimundo Nonato - PI","Sebastião Barros - PI","Sebastião Leal - PI","Sigefredo Pacheco - PI","Simões - PI","Simplício Mendes - PI","Socorro do Piauí - PI","Sussuapara - PI","Tamboril do Piauí - PI","Tanque do Piauí - PI","Teresina - PI","União - PI","Uruçuí - PI","Valença do Piauí - PI","Várzea Branca - PI","Várzea Grande - PI","Vera Mendes - PI","Vila Nova do Piauí - PI","Wall Ferraz - PI"],["23.4%","16.4%","2.4%","19.3%","15.7%","16.2%","2.9%","29.7%","10.5%","10.1%","11.7%","39.0%","13.5%","15.7%","9.3%","14.4%","13.2%","75.6%","6.6%","8.4%","71.1%","21.0%","11.4%","23.0%","17.4%","9.7%","10.5%","6.7%","17.0%","18.0%","37.5%","27.1%","11.2%","7.0%","9.1%","15.3%","17.5%","15.9%","10.9%","10.0%","18.5%","12.0%","20.6%","5.8%","13.8%","9.5%","5.7%","19.0%","13.3%","5.2%","11.9%","7.1%","16.0%","14.6%","13.2%","12.7%","14.3%","6.4%","11.3%","10.7%","7.5%","11.7%","30.7%","13.4%","27.1%","24.1%","5.8%","14.2%","77.7%","16.2%","9.0%","1.8%","11.2%","7.8%","14.6%","7.3%","12.6%","10.6%","4.0%","13.9%","13.4%","13.5%","1.7%","9.1%","15.1%","6.5%","9.7%","7.6%","22.4%","59.6%","32.0%","13.5%","9.9%","12.0%","15.5%","9.9%","14.0%","21.8%","14.8%","23.3%","16.1%","10.8%","28.0%","29.2%","13.9%","12.8%","10.1%","10.3%","13.6%","12.1%","10.9%","4.0%","7.5%","1.1%","7.5%","6.2%","22.8%","45.6%","10.3%","8.0%","8.9%","12.8%","5.4%","8.9%","11.4%","6.1%","12.2%","3.7%","13.6%","8.2%","18.4%","56.5%","15.4%","8.8%","12.8%","8.4%","7.6%","13.5%","7.3%","10.2%","18.0%","3.8%","26.8%","10.8%","14.2%","37.5%","64.8%","15.6%","10.8%","27.6%","2.8%","23.0%","23.8%","12.7%","6.8%","16.2%","4.0%","16.2%","13.2%","3.1%","21.4%","22.7%","9.0%","2.7%","5.8%","30.7%","6.3%","3.1%","20.2%","39.9%","22.8%","2.8%","78.3%","13.4%","9.5%","22.5%","71.9%","25.3%","14.8%","10.7%","9.7%","3.8%","17.3%","16.2%","14.1%","12.0%","12.2%","21.3%","27.7%","15.8%","7.2%","14.8%","6.6%","5.4%","2.7%","28.6%","14.9%","20.2%","10.7%","12.1%","12.8%","11.1%","8.0%","13.1%","9.6%","4.6%","29.0%","68.4%","10.6%","5.6%","12.1%","11.7%","24.9%","11.0%","22.6%","0.3%","8.3%","46.3%","7.2%","14.5%","13.5%","15.6%","18.5%","12.5%"],["3.5%","7.1%","8.1%","4.2%","4.1%","4.1%","11.6%","4.2%","10.1%","5.5%","5.4%","30.4%","5.0%","4.0%","4.7%","3.3%","4.8%","4.7%","4.9%","6.0%","4.2%","11.6%","6.5%","3.6%","9.1%","5.4%","15.1%","3.3%","3.3%","5.0%","7.2%","4.1%","3.6%","3.4%","7.5%","4.7%","6.8%","4.1%","6.2%","3.5%","5.7%","64.7%","4.3%","13.1%","4.2%","3.1%","8.3%","4.1%","6.2%","4.5%","3.3%","4.0%","3.2%","8.3%","6.8%","3.9%","4.8%","3.6%","3.9%","4.3%","4.8%","4.5%","4.5%","5.1%","4.4%","2.9%","6.1%","8.5%","4.1%","3.3%","29.7%","25.8%","4.0%","5.8%","5.0%","44.5%","5.6%","6.9%","7.2%","2.8%","7.2%","3.4%","8.1%","5.0%","4.8%","3.8%","6.3%","14.3%","10.0%","4.4%","49.4%","4.2%","5.5%","30.7%","6.8%","6.5%","3.8%","4.7%","5.5%","5.4%","5.2%","4.1%","4.1%","4.7%","48.4%","4.6%","3.6%","6.9%","6.3%","28.4%","4.5%","4.2%","4.7%","80.0%","3.5%","19.9%","3.7%","6.9%","7.9%","5.2%","3.4%","5.7%","52.0%","6.0%","3.5%","4.7%","4.3%","7.7%","3.2%","7.2%","4.6%","4.1%","3.6%","4.9%","3.4%","4.9%","11.6%","3.7%","3.9%","5.2%","3.4%","8.1%","4.1%","7.4%","5.4%","4.7%","4.2%","5.6%","4.1%","4.1%","13.7%","4.1%","5.1%","4.3%","7.6%","4.9%","5.8%","5.7%","4.3%","11.3%","4.7%","5.0%","8.0%","13.1%","14.6%","3.8%","5.4%","57.8%","3.8%","4.3%","3.8%","80.7%","4.4%","5.4%","5.0%","5.2%","6.1%","5.2%","4.5%","10.5%","16.8%","4.6%","4.9%","3.8%","5.3%","4.0%","4.2%","3.8%","5.3%","4.6%","3.4%","4.6%","4.1%","3.5%","41.2%","4.0%","4.6%","5.4%","8.0%","4.1%","4.6%","3.8%","34.3%","4.6%","5.5%","8.8%","2.8%","4.6%","3.6%","63.5%","6.4%","5.1%","5.0%","3.6%","4.0%","17.2%","7.2%","22.0%","8.2%","3.5%","5.1%","3.8%","4.4%","4.3%"],["73.1%","76.5%","89.6%","76.5%","80.2%","79.7%","85.4%","66.1%","79.4%","84.4%","82.9%","30.6%","81.4%","80.3%","86.0%","82.3%","82.0%","19.7%","88.5%","85.6%","24.7%","67.3%","82.0%","73.5%","73.5%","84.9%","74.4%","89.9%","79.6%","76.9%","55.2%","68.8%","85.2%","89.6%","83.5%","80.0%","75.7%","80.0%","82.9%","86.5%","75.8%","23.3%","75.1%","81.0%","82.0%","87.3%","86.0%","76.8%","80.5%","90.2%","84.8%","88.9%","80.8%","77.2%","80.0%","83.4%","80.8%","90.1%","84.8%","85.0%","87.7%","83.9%","64.8%","81.5%","68.5%","72.9%","88.0%","77.2%","18.2%","80.5%","61.3%","72.4%","84.9%","86.4%","80.5%","48.3%","81.9%","82.5%","88.8%","83.3%","79.5%","83.1%","90.1%","85.9%","80.1%","89.7%","83.9%","78.1%","67.6%","36.1%","18.6%","82.2%","84.6%","57.3%","77.7%","83.6%","82.2%","73.6%","79.7%","71.2%","78.7%","85.2%","67.9%","66.1%","37.7%","82.5%","86.3%","82.9%","80.1%","59.5%","84.6%","91.8%","87.8%","18.9%","88.9%","73.9%","73.5%","47.6%","81.9%","86.7%","87.7%","81.5%","42.5%","85.1%","85.0%","89.1%","83.5%","88.6%","83.2%","84.6%","76.9%","39.4%","81.0%","86.4%","83.7%","86.7%","80.8%","82.7%","88.8%","84.5%","78.5%","88.2%","69.1%","81.9%","80.4%","57.8%","31.0%","78.8%","85.1%","68.3%","83.5%","72.9%","71.1%","83.0%","85.6%","78.9%","90.2%","78.1%","82.6%","85.5%","73.9%","72.3%","83.0%","84.2%","79.6%","65.6%","88.3%","39.1%","76.0%","55.8%","73.3%","16.6%","17.3%","81.2%","85.6%","72.3%","22.0%","69.4%","80.7%","78.8%","73.5%","91.7%","77.7%","80.0%","80.6%","84.0%","83.6%","75.0%","67.0%","79.6%","89.4%","80.6%","89.3%","91.0%","56.1%","67.3%","80.5%","74.4%","81.3%","83.8%","82.6%","85.1%","57.7%","82.3%","84.9%","86.6%","68.1%","26.9%","85.8%","30.9%","81.6%","83.2%","70.0%","85.4%","73.4%","82.6%","84.5%","31.7%","84.6%","82.0%","81.3%","80.6%","77.1%","83.2%"]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th>Município<\/th>\n      <th>Agropecuária<\/th>\n      <th>Indústria<\/th>\n      <th>Serviços<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"pageLength":10,"language":{"url":"//cdn.datatables.net/plug-ins/1.13.6/i18n/pt-BR.json"},"columnDefs":[{"name":"Município","targets":0},{"name":"Agropecuária","targets":1},{"name":"Indústria","targets":2},{"name":"Serviços","targets":3}],"order":[],"autoWidth":false,"orderClasses":false,"orderCellsTop":true}},"evals":[],"jsHooks":[]}</script>
 </div>
 </div>
 </section>
